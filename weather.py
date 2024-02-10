@@ -1,5 +1,6 @@
 import sys
 import os
+import argparse
 
 libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib")
 if os.path.exists(libdir):
@@ -9,11 +10,6 @@ from datetime import date
 from PIL import Image, ImageOps, ImageDraw, ImageFont
 
 import requests
-from waveshare_epd import epd2in13_V4
-
-# Units are "standard" (kelvin), "imperial", or "metric"
-units = "metric"
-symbol = "C"
 
 def get_weather(api_key, city_id):
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
@@ -42,12 +38,41 @@ def get_weather_icon(code):
 
     return img
 
-if __name__ == "__main__":
-    epd = epd2in13_V4.EPD()
+class EPD_MOCK():
+    width  = 122
+    height = 250
 
-    ow_api_key = os.environ.get("OPENWEATHERMAP_KEY")
-    ow_city_id = os.environ.get("OPENWEATHERMAP_CITY")
-    weather = get_weather(ow_api_key, ow_city_id)
+symbols = {
+    "metric": "C",
+    "imperial": "F",
+    "standard": "K"
+}
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="A simple weather app for the Waveshare E-Paper display on a Raspberry PI")
+
+    parser.add_argument("-d", "--debug", action="store_true",
+                    help="Debug mode (outputs an image instead of writing to the display)")
+    parser.add_argument("-u", "--units", type=str, default="metric",
+                    help="Whether to use 'metric', 'imperial', or 'standard'")
+    parser.add_argument("-c", "--cityid", type=str,
+                    help="City ID [ENV:OPENWEATHERMAP_CITY]")
+    parser.add_argument("-k", "--key", type=str,
+                    help="OpenWeatherMap API Key [ENV:OPENWEATHERMAP_KEY]")
+    args = parser.parse_args()
+
+    ow_cityid  = args.cityid or os.environ.get("OPENWEATHERMAP_CITY")
+    ow_api_key = args.key or os.environ.get("OPENWEATHERMAP_KEY")
+    units = args.units
+
+    if not args.debug:
+        from waveshare_epd import epd2in13_V4
+        epd = epd2in13_V4.EPD()
+    else:
+        epd = EPD_MOCK
+
+    weather = get_weather(ow_api_key, ow_cityid)
+    symbol  = symbols[units]
 
     temp_current = str(round(weather["main"]["temp"]))
     temp_feels   = "Feels like " + str(round(weather["main"]["feels_like"]))
@@ -94,6 +119,9 @@ if __name__ == "__main__":
     canvas.text((epd.width / 2, epd.height - 4), temp_loc, font=fontSmall, fill=255, anchor="mb")
 
     # Send the resulting image to the E-Paper Display
-    epd.init()
-    epd.display(epd.getbuffer(image))
-    epd.sleep()
+    if not args.debug:
+        epd.init()
+        epd.display(epd.getbuffer(image))
+        epd.sleep()
+    else:
+        image.save("debug.png")
