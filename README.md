@@ -33,6 +33,8 @@ To manage the service, use systemd's built-ins:
 
 ### Screenshot
 
+    python3 weather.py -d --cityid 2643743
+
 ![Screenshot](output.jpg)
 
 ### In Action
