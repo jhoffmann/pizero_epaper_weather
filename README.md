@@ -9,7 +9,7 @@ Create a transient timer to update the display every 15 minutes, thus no need fo
 
     systemd-run -u epaper-weather -r --uid=1000 \
         -E OPENWEATHERMAP_CITY=<city> -E OPENWEATHERMAP_KEY=<apikey> \
-        --on-boot=60 --on-unit-active=900 python /home/atlas/epaper/epaper_weather.py
+        --on-boot=60 --on-unit-active=900 python /path/to/weather.py
 
 To manage the service, use systemd's built-ins:
 
@@ -18,3 +18,11 @@ To manage the service, use systemd's built-ins:
     systemctl stop epaper-weather.timer
 
 The program currently displays the temperature in metric, however there are two variables to change if you wish to use imperial units.
+
+### Screenshot
+
+![Screenshot](output.jpg)
+
+### In Action
+
+![Action Shot](display.jpg)
