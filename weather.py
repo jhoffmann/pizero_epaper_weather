@@ -76,8 +76,8 @@ if __name__ == "__main__":
 
     temp_current = str(round(weather["main"]["temp"]))
     temp_feels   = "Feels like " + str(round(weather["main"]["feels_like"]))
-    temp_low     = str(round(weather["main"]["temp_min"]))
-    temp_high    = str(round(weather["main"]["temp_max"]))
+    temp_min     = str(round(weather["main"]["temp_min"]))
+    temp_max    = str(round(weather["main"]["temp_max"]))
     temp_desc    = weather["weather"][0]["description"]
     temp_loc     = weather["name"] + ", " + weather["sys"]["country"]
     temp_icon    = get_weather_icon(weather["weather"][0]["icon"])
@@ -96,8 +96,8 @@ if __name__ == "__main__":
     canvas.line([epd.width / 2, 100, epd.width / 2, 150], fill=0)
 
     # Labels
-    canvas.text((epd.width / 4, 104), "High", font=fontSmall, fill=0, anchor="mt")
-    canvas.text((epd.width / 4 * 3, 104), "Low", font=fontSmall, fill=0, anchor="mt")
+    canvas.text((epd.width / 4, 104), "Max", font=fontSmall, fill=0, anchor="mt")
+    canvas.text((epd.width / 4 * 3, 104), "Min", font=fontSmall, fill=0, anchor="mt")
     canvas.text((epd.width - 10, 30), symbol, font=fontSmall, fill=0, anchor="mt") # Replace with your preferred units identifier
 
     # Header text
@@ -106,8 +106,8 @@ if __name__ == "__main__":
 
     # Weather temperatures
     canvas.text((epd.width / 2, 55), temp_current, font=fontLarge, fill=0, anchor="mm")
-    canvas.text((epd.width / 4, 132), temp_high, font=fontMedium, fill=0, anchor="mm")
-    canvas.text((epd.width / 4 * 3, 132), temp_low, font=fontMedium, fill=0, anchor="mm")
+    canvas.text((epd.width / 4, 132), temp_max, font=fontMedium, fill=0, anchor="mm")
+    canvas.text((epd.width / 4 * 3, 132), temp_min, font=fontMedium, fill=0, anchor="mm")
     canvas.text((epd.width / 2, 90), temp_feels, font=fontSmall, fill=0, anchor="mm")
 
     # Icon and description
