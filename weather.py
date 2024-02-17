@@ -77,7 +77,7 @@ if __name__ == "__main__":
     temp_current = str(round(weather["main"]["temp"]))
     temp_feels   = "Feels like " + str(round(weather["main"]["feels_like"]))
     temp_min     = str(round(weather["main"]["temp_min"]))
-    temp_max    = str(round(weather["main"]["temp_max"]))
+    temp_max     = str(round(weather["main"]["temp_max"]))
     temp_desc    = weather["weather"][0]["description"]
     temp_loc     = weather["name"] + ", " + weather["sys"]["country"]
     temp_icon    = get_weather_icon(weather["weather"][0]["icon"])
